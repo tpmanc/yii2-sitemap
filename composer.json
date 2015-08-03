@@ -1,0 +1,22 @@
+{
+    "name": "tpmanc/yii2-sitemap",
+    "keywords": ["yii", "sitemap", "yii2", "generator"],
+    "description": "Yii 2 sitemap geenrator",
+    "homepage": "https://github.com/tpmanc/yii2-sitemap",
+    "license": "BSD-3-Clause",
+    "minimum-stability" : "dev",
+    "authors": [
+        {
+            "name": "tpmanc",
+            "email": "tpxtrime@mail.ru",
+            "homepage": "https://github.com/tpmanc",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"tpmanc\\sitemap\\": ""}
+    },
+    "require": {
+        "php": ">=5.4.0"
+    }
+}
