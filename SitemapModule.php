@@ -23,7 +23,7 @@ class SitemapModule extends \yii\base\Module
         Yii::$app->i18n->translations['sitemap/*'] = [
             'class' => 'yii\i18n\PhpMessageSource',
             'sourceLanguage' => 'en-US',
-            'basePath' => '@vendor/tpmanc/sitemap/messages',
+            'basePath' => '@vendor/tpmanc/yii2-sitemap/messages',
             'fileMap' => [
                 'sitemap/module' => 'module.php',
             ],

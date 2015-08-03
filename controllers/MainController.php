@@ -3,6 +3,7 @@
 namespace tpmanc\sitemap\controllers;
 
 use yii\web\Controller;
+use tpmanc\sitemap\SitemapModule;
 
 class MainController extends Controller
 {
@@ -35,8 +36,13 @@ class MainController extends Controller
         }
         $dom->appendChild($urlSet);
         $xml = $dom->saveXML();
-        file_put_contents($this->module->savePath, $xml);
+        $result = file_put_contents($this->module->savePath, $xml);
 
+        if ($result === false) {
+            \Yii::$app->getSession()->setFlash('error', SitemapModule::t('Error'));
+        } else {
+            \Yii::$app->getSession()->setFlash('success', SitemapModule::t('Complete'));
+        }
         return $this->redirect(['index']);
     }
 
@@ -45,11 +51,9 @@ class MainController extends Controller
         $items = $this->module->items;
         $models = [];
         foreach ($items as $item) {
-            if ($item['enableExcluding'] === true) {
+            if (isset($item['enableExcluding']) && $item['enableExcluding'] === true) {
                 $class = $item['class'];
-                $models[] = [
-                    $class::className() => $class::findAll(),
-                ];
+                $models[$class::className()] = $class::find()->all();
             }
         }
         return $this->render('index', [
