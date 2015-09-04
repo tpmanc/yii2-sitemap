@@ -2,6 +2,7 @@
 
 namespace tpmanc\sitemap\controllers;
 
+use Yii;
 use yii\web\Controller;
 use tpmanc\sitemap\SitemapModule;
 
@@ -9,6 +10,8 @@ class MainController extends Controller
 {
     public function actionGenerate()
     {
+        // echo Yii::$app->frontendUrlManager->createUrl(['/product/view', 'chpu' => 'adas']);die();
+
         $dom = new \DOMDocument('1.0', 'utf-8');
         $urlSet = $dom->createElement('urlset');
         $urlSet->setAttribute('xmlns','http://www.sitemaps.org/schemas/sitemap/0.9');
@@ -16,13 +19,26 @@ class MainController extends Controller
         $urlItems = $this->getUrlItems();
 
         foreach ($this->module->items as $i) {
-            $models = $i['class']::find()->all();
+            if (isset($i['where'])) {
+                $models = $i['class']::find()->where($i['where'])->all();
+            } else {
+                $models = $i['class']::find()->all();
+            }
             foreach ($models as $m) {
                 $url = $dom->createElement('url');
                 foreach ($urlItems as $item => $default) {
                     $elem = $dom->createElement($item);
                     if ($item === 'loc') {
-                        $value = $i['baseUrl'] . $m->{$i['urlField']};
+                        $urlArr = $i['urlRule'];
+                        foreach ($urlArr as $key => $part) {
+                            if (isset($i['urlMethod'])) {
+                                $part = str_replace('{{urlField}}', $m->{$i['urlMethod']}(), $part);
+                            } else {
+                                $part = str_replace('{{urlField}}', $m->{$i['urlField']}, $part);
+                            }
+                            $urlArr[$key] = $part;
+                        }
+                        $value = Yii::getAlias($this->module->baseUrl) . Yii::$app->frontendUrlManager->createUrl($urlArr);
                     } elseif (isset($i[$item])) {
                         $value = $i[$item];
                     } else {

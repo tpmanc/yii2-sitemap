@@ -3,14 +3,26 @@
 namespace tpmanc\sitemap;
 
 use Yii;
+
 // TODO: вывести lat update в шаблоне
 class SitemapModule extends \yii\base\Module
 {
     public $controllerNamespace = 'tpmanc\sitemap\controllers';
 
+    /**
+     * @var array Array with required models
+     */
     public $items = [];
 
+    /**
+     * @var string Save folder path
+     */
     public $savePath = '';
+
+    /**
+     * @var string Site web adress
+     */
+    public $baseUrl;
 
     public function init()
     {
@@ -18,7 +30,7 @@ class SitemapModule extends \yii\base\Module
         $this->registerTranslations();
     }
 
-    public function registerTranslations()
+    private function registerTranslations()
     {
         Yii::$app->i18n->translations['sitemap/*'] = [
             'class' => 'yii\i18n\PhpMessageSource',
